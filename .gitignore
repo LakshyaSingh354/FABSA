@@ -1,0 +1,5 @@
+onnx
+sentiment_model
+*.csv
+.vscode
+.env
