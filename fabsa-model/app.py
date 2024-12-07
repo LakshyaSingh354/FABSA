@@ -2,39 +2,42 @@ from datetime import datetime, timedelta
 import os
 import dotenv
 
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, Query
+from fastapi.middleware.cors import CORSMiddleware
 from FABSA import FABSA
-
 
 dotenv.load_dotenv()
 api_key = os.getenv("NEWS_API")
-entity = "Tesla"
 
-# yesterday's date
-current_date = datetime.today() - timedelta(days=1)
-current_date = current_date.strftime('%Y-%m-%d')
-
-# past 7 days
-from_date = datetime.today() - timedelta(days=7)
-from_date = from_date.strftime('%Y-%m-%d')
+# Default parameters
+default_entity = ""
+default_current_date = (datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d')
+default_from_date = (datetime.today() - timedelta(days=7)).strftime('%Y-%m-%d')
+default_num_news = 50
 
 app = FastAPI()
 
-class SentimentRequest(BaseModel):
-    entity: str
-    from_date: str = from_date
-    to_date: str = current_date
-    num_news: int = 50
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all HTTP methods
+    allow_headers=["*"],  # Allows all headers
+)
 
-@app.post("/analyze_sentiment")
-async def analyze_sentiment(request: SentimentRequest):
+@app.get("/analyze")
+async def analyze_sentiment(
+    entity: str = Query(..., description="Entity to analyze sentiment for"),
+    from_date: str = Query(default=default_from_date, description="Start date for the news search (YYYY-MM-DD)"),
+    to_date: str = Query(default=default_current_date, description="End date for the news search (YYYY-MM-DD)"),
+    num_news: int = Query(default=default_num_news, description="Number of news articles to fetch")
+):
     fabsa = FABSA(
-        entity=request.entity,
+        entity=entity,
         api_key=api_key,
-        from_date=request.from_date,
-        to_date=request.to_date,
-        num_news=request.num_news
+        from_date=from_date,
+        to_date=to_date,
+        num_news=num_news
     )
     sentiment_data = fabsa.predict_sentiment()
     return sentiment_data
