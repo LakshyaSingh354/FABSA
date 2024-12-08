@@ -60,8 +60,7 @@ class FABSA:
         """
         articles = self.fetch_news()  # Fetch the raw articles
         if not articles:
-            print("No news articles found. Try relaxing the date range or check your query again.")
-            exit()
+            return {"error": "No news articles found. Try relaxing the date range or check your query again."}
 
         # Extract descriptions or titles from articles
         headlines = [
