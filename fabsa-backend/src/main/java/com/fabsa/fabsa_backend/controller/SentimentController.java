@@ -1,6 +1,8 @@
 package com.fabsa.fabsa_backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fabsa.fabsa_backend.authentication.JwtUtil;
 import com.fabsa.fabsa_backend.database.HistoryRepository;
 import com.fabsa.fabsa_backend.database.UserHistory;
+import com.fabsa.fabsa_backend.service.SentimentResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,33 +27,31 @@ public class SentimentController {
     private JwtUtil jwtUtil;
 
     @GetMapping("/{entity}")
-    public ResponseEntity<String> analyzeSentiment(@PathVariable String entity, @RequestHeader("Auth") String token) {
+    @Cacheable(value = "sentiment", key = "#entity")
+    public SentimentResponse analyzeSentiment(
+            @PathVariable String entity,
+            @RequestHeader("Auth") String token) throws Exception {
         try {
-            // String token = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczMzYwNDAwOCwiZXhwIjoxNzMzNjQwMDA4fQ.knwsDsfetbeKI-x-dGN7Dhpi75qcSlOTnMRHx8oy9xk";
+            // Extract user ID from token
+            String userId = jwtUtil.extractUsername(token.substring(7));
+            if (userId == null || userId.isEmpty()) {
+                throw new Exception("Invalid token");
+            }
+
+            // Fetch sentiment from Python API
             String pythonApiUrl = "http://localhost:8000/analyze?entity=" + entity;
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> pythonResponse = restTemplate.getForEntity(pythonApiUrl, String.class);
-            System.out.println("Sentiment Retrieved Successfully");
-            // Extract user ID from JWT token
-            System.out.println(
-                    "Token: " + token.substring(7) + " | Username: " + jwtUtil.extractUsername(token.substring(7))
-            );
-            String userId = jwtUtil.extractUsername(token.substring(7)); // Remove "Bearer " prefix
-
-            // Call the Python API
-
-            // Extract sentiment from Python API response
             String sentiment = pythonResponse.getBody();
 
-            // Save history in MongoDB
+            // Save history
             UserHistory history = new UserHistory(userId, entity, sentiment, "", LocalDateTime.now());
             historyRepository.save(history);
 
-            // Return Python API response to client
-            return ResponseEntity.ok(String.format("{\"entity\": \"%s\", \"sentiment\": %s, \"userId\": %s}", entity, sentiment, userId));
+            // Create and return response
+            return new SentimentResponse(entity, sentiment, userId);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error calling Python API: " + e.getMessage());
+            throw new Exception("Error processing sentiment", e);
         }
     }
 

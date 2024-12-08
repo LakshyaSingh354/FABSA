@@ -20,7 +20,7 @@ public class SentimentService {
     }
 
     public String analyzeSentiment(String entity) {
-        String pythonApiUrl = "http://localhost:8080/analyze";
+        String pythonApiUrl = "http://localhost:8000/analyze";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         
