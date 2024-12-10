@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,14 @@ public class SentimentService {
         HttpEntity<Map<String, String>> entityRequest = new HttpEntity<>(request, headers);
         ResponseEntity<String> response = restTemplate.postForEntity(pythonApiUrl, entityRequest, String.class);
         return response.getBody();
+    }
+
+    @Cacheable(value = "sentiment", key = "#entity")
+    public String getSentimentFromApi(String entity) {
+        // Fetch sentiment from Python API
+        String pythonApiUrl = "http://localhost:8000/analyze?entity=" + entity;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> pythonResponse = restTemplate.getForEntity(pythonApiUrl, String.class);
+        return pythonResponse.getBody();
     }
 }

@@ -12,6 +12,7 @@ import com.fabsa.fabsa_backend.authentication.JwtUtil;
 import com.fabsa.fabsa_backend.database.HistoryRepository;
 import com.fabsa.fabsa_backend.database.UserHistory;
 import com.fabsa.fabsa_backend.service.SentimentResponse;
+import com.fabsa.fabsa_backend.service.SentimentService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,8 +27,10 @@ public class SentimentController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private SentimentService sentimentService;
+
     @GetMapping("/{entity}")
-    @Cacheable(value = "sentiment", key = "#entity")
     public SentimentResponse analyzeSentiment(
             @PathVariable String entity,
             @RequestHeader("Auth") String token) throws Exception {
@@ -38,11 +41,8 @@ public class SentimentController {
                 throw new Exception("Invalid token");
             }
 
-            // Fetch sentiment from Python API
-            String pythonApiUrl = "http://localhost:8000/analyze?entity=" + entity;
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> pythonResponse = restTemplate.getForEntity(pythonApiUrl, String.class);
-            String sentiment = pythonResponse.getBody();
+            // Fetch sentiment (cached)
+            String sentiment = sentimentService.getSentimentFromApi(entity);
 
             // Save history
             UserHistory history = new UserHistory(userId, entity, sentiment, "", LocalDateTime.now());
