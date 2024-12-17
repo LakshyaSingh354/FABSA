@@ -55,6 +55,36 @@ public class SentimentController {
         }
     }
 
+    @GetMapping("/historical-sentiment/{entity}")
+    public ResponseEntity<?> getAndUpdateHistSentiment(@PathVariable String entity, @RequestHeader("Auth") String token){
+        try{
+            String userId = jwtUtil.extractUsername(token.substring(7));
+            if (userId == null || userId.isEmpty()) {
+                throw new Exception("Invalid token");
+            }
+
+            List<UserHistory> userHistory = historyRepository.findByUserId(userId);
+
+            if (userHistory.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No history found for user " + userId);
+                
+            }
+
+            UserHistory latestHistory = userHistory.get(userHistory.size() - 1);
+
+            String histSentiment = sentimentService.getHistSentiment(entity);
+
+            latestHistory.setHistSentiment(histSentiment);
+            historyRepository.save(latestHistory);
+
+            return ResponseEntity.ok("Historical sentiment updated for " + entity);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating historical sentiment: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/history")
     public ResponseEntity<?> getHistory(@RequestHeader("Auth") String token) {
         try {

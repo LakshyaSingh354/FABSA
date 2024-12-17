@@ -41,3 +41,18 @@ async def analyze_sentiment(
     )
     sentiment_data = fabsa.predict_sentiment()
     return sentiment_data
+
+@app.get("/historical_sentiment")
+async def historical_sentiment(
+    entity: str = Query(..., description="Entity to analyze sentiment for"),
+    days: int = Query(30, description="Number of days to analyze sentiment for")
+):
+    fabsa = FABSA(
+        entity=entity,
+        api_key=api_key,
+        from_date=(datetime.today() - timedelta(days=days)).strftime('%Y-%m-%d'),
+        to_date=(datetime.today() - timedelta(days=1)).strftime('%Y-%m-%d'),
+        num_news=50
+    )
+    sentiment_data = fabsa.historical_sentiment_analysis(days)
+    return sentiment_data

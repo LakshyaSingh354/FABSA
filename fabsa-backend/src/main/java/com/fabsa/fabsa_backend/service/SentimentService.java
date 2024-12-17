@@ -41,4 +41,12 @@ public class SentimentService {
         ResponseEntity<String> pythonResponse = restTemplate.getForEntity(pythonApiUrl, String.class);
         return pythonResponse.getBody();
     }
+
+    @Cacheable(value = "histSentiment", key = "#entity")
+    public String getHistSentiment(String entity){
+        String apiUrl = "http://localhost:8000/historical_sentiment?entity=" + entity;
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+        return response.getBody();
+    }
 }
