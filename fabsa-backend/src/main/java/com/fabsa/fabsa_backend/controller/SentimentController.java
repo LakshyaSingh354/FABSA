@@ -46,39 +46,38 @@ public class SentimentController {
 
             // Save history
             UserHistory history = new UserHistory(userId, entity, sentiment, "", LocalDateTime.now());
-            historyRepository.save(history);
+            UserHistory savedHistory = historyRepository.save(history);
 
             // Create and return response
-            return new SentimentResponse(entity, sentiment, userId);
+            return new SentimentResponse(entity, sentiment, userId, savedHistory.getId());
         } catch (Exception e) {
             throw new Exception("Error processing sentiment", e);
         }
     }
 
-    @GetMapping("/historical-sentiment/{entity}")
-    public ResponseEntity<?> getAndUpdateHistSentiment(@PathVariable String entity, @RequestHeader("Auth") String token){
+    @GetMapping("/historical-sentiment/{id}")
+    public ResponseEntity<?> getAndUpdateHistSentiment(@PathVariable String id, @RequestHeader("Auth") String token){
         try{
             String userId = jwtUtil.extractUsername(token.substring(7));
             if (userId == null || userId.isEmpty()) {
                 throw new Exception("Invalid token");
             }
 
-            List<UserHistory> userHistory = historyRepository.findByUserId(userId);
 
-            if (userHistory.isEmpty()) {
+
+            UserHistory userHistory = historyRepository.findById(id).orElse(null);
+
+            if (userHistory == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("No history found for user " + userId);
-                
+                        .body("No history found for id " + id);
             }
 
-            UserHistory latestHistory = userHistory.get(userHistory.size() - 1);
+            String histSentiment = sentimentService.getHistSentiment(userHistory.getEntity());
 
-            String histSentiment = sentimentService.getHistSentiment(entity);
+            userHistory.setHistSentiment(histSentiment);
+            historyRepository.save(userHistory);
 
-            latestHistory.setHistSentiment(histSentiment);
-            historyRepository.save(latestHistory);
-
-            return ResponseEntity.ok("Historical sentiment updated for " + entity);
+            return ResponseEntity.ok(userHistory);
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error updating historical sentiment: " + e.getMessage());
@@ -93,6 +92,23 @@ public class SentimentController {
 
             // Retrieve user history from MongoDB
             List<UserHistory> userHistory = historyRepository.findByUserId(userId);
+
+            return ResponseEntity.ok(userHistory);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving history: " + e.getMessage());
+        }
+    }
+    @GetMapping("/history/{id}")
+    public ResponseEntity<?> getSingleHistory(@RequestHeader("Auth") String token, @PathVariable String id) {
+        try {
+            // Retrieve user history from MongoDB
+            UserHistory userHistory = historyRepository.findById(id).orElse(null);
+
+            if (userHistory == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No history found for id " + id);
+            }
 
             return ResponseEntity.ok(userHistory);
         } catch (Exception e) {
