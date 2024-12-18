@@ -5,8 +5,9 @@ import SentimentChart from "@/components/historical-chart";
 import { ValueBar } from "@/components/value-bar";
 import { GrNewWindow } from "react-icons/gr";
 import { CircularProgress } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AuthProvider, useAuth } from "../context/auth-context";
 
 type Sentiment = {
 	individual_sentiments: string[];
@@ -37,10 +38,18 @@ type HistoryResponse = {
 	timestamp: string;
 };
 
-export default function Search() {
+function Search() {
+
+	const authContext = useAuth();
+	const { isAuthenticated } = authContext;
+    const router = useRouter();
+
+	console.log(`isAuthenticated: ${isAuthenticated}`);
+
+	const { token } = authContext;
+	console.log(`token: ${token}`);
 	const placeholders: string[] = ["Google", "Tesla", "Microsoft", "Bitcoin"];
 
-	const router = useRouter();
 	const [query, setQuery] = useState("");
 	const [apiResponse, setApiResponse] = useState(null as ApiResponse | null);
 	const [sessionId, setSessionId] = useState("");
@@ -60,7 +69,7 @@ export default function Search() {
 		try {
 			const response = await fetch(`http://localhost:8080/api/v1/sentiment/${query}`, {
 				headers: {
-					Auth: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczNDQ2Mzc5OSwiZXhwIjoxNzM0NTUwMTk5fQ.5jVZMOEtkfrRy_JHFNML6D4ps9sInAXkTspI_FM96HU",
+					Auth: `Bearer ${token}`,
 				},
 			});
 			const data = await response.json();
@@ -132,7 +141,7 @@ export default function Search() {
 			`http://localhost:8080/api/v1/sentiment/historical-sentiment/${sessionId}`,
 			{
 				headers: {
-					Auth: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczNDQ2Mzc5OSwiZXhwIjoxNzM0NTUwMTk5fQ.5jVZMOEtkfrRy_JHFNML6D4ps9sInAXkTspI_FM96HU",
+					Auth: `Bearer ${token}`,
 				},
 			}
 		)
@@ -241,3 +250,10 @@ export default function Search() {
 	);
 }
 
+export default function SearchPage() {
+	return (
+		<AuthProvider>
+		<Search />
+	</AuthProvider>
+	)
+}

@@ -1,11 +1,11 @@
 import React from 'react'
+import { AuthProvider } from './context/auth-context';
 
-export default function Home() {
-  return (
-    <div className="h-20 text-3xl font-bold underline bg-red-700">
-      <h1>Home</h1>
 
-    </div>
-  )
+import { AppProps } from 'next/app';
+
+export default function MyApp({ Component, pageProps }: AppProps) {
+    return (
+            <Component {...pageProps} />
+    );
 }
-  
