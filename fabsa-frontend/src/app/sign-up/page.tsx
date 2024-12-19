@@ -2,43 +2,67 @@
 import { Input } from "@/components/signup-input";
 import { Label } from "@/components/signup-label";
 import { cn } from "@/lib/utils";
+import { AuthProvider, useAuth } from "../context/auth-context";
+import { handleAuth } from "../sign-in/page";
 
-const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(
-        formData.entries()
-    );
-    const json = Object.fromEntries(
-        Object.entries(data).map(([key, value]) => [key, String(value)])
-    );
+// const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     const formData = new FormData(e.currentTarget);
+//     const data = Object.fromEntries(
+//         formData.entries()
+//     );
+//     const json = Object.fromEntries(
+//         Object.entries(data).map(([key, value]) => [key, String(value)])
+//     );
 
-    console.log(JSON.stringify(json))
+//     console.log(JSON.stringify(json))
 
-    const url = 'http://localhost:8080/api/v1/auth/register';
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(json),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-        })
-        .then((data) => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-        window.location.href = '/new-search';
-};
+//     const url = 'http://localhost:8080/api/v1/auth/register';
+//     fetch(url, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(json),
+//     })
+//         .then((response) => {
+//             if (!response.ok) {
+//                 throw new Error(`HTTP error! Status: ${response.status}`);
+//             }
+//         })
+//         .then((data) => {
+//             console.log('Success:', data);
+//         })
+//         .catch((error) => {
+//             console.error('Error:', error);
+//         });
+//         window.location.href = '/new-search';
+// };
 
+function SignUp() {
+	const authContext = useAuth();
 
-export default function SignUp() {
+	if (authContext.isAuthenticated) {
+		window.location.href = "/new-search";
+	}
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		const formData = new FormData(e.currentTarget);
+		const registerUrl = "http://localhost:8080/api/v1/auth/register";
+		const loginUrl = "http://localhost:8080/api/v1/auth/login";
+
+		try {
+			// Step 1: Register the user
+			await handleAuth(registerUrl, formData, null, null);
+
+			// Step 2: Automatically log in after successful registration
+			await handleAuth(loginUrl, formData, authContext, "/new-search");
+		} catch (error) {
+			console.error("Error during sign-up or login:", error);
+		}
+	};
 	return (
 		<div className="flex flex-col justify-center items-center h-screen">
 			<div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
@@ -49,7 +73,11 @@ export default function SignUp() {
 					<div className="flex flex-col space-y-2 mb-4">
 						<LabelInputContainer>
 							<Label htmlFor="username">Username</Label>
-							<Input type="text" name="username" placeholder="john" />
+							<Input
+								type="text"
+								name="username"
+								placeholder="john"
+							/>
 						</LabelInputContainer>
 						<LabelInputContainer>
 							<Label htmlFor="email">E-mail</Label>
@@ -57,7 +85,7 @@ export default function SignUp() {
 								id="email"
 								placeholder="john@example.com"
 								type="email"
-                                name="email"
+								name="email"
 							/>
 						</LabelInputContainer>
 						<LabelInputContainer>
@@ -66,7 +94,7 @@ export default function SignUp() {
 								id="password"
 								placeholder="••••••••"
 								type="password"
-                                name="password"
+								name="password"
 							/>
 						</LabelInputContainer>
 					</div>
@@ -79,6 +107,12 @@ export default function SignUp() {
 					</button>
 				</form>
 			</div>
+			<button
+				onClick={() => (window.location.href = "/sign-in")}
+				className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+			>
+				Sign in instead
+			</button>
 		</div>
 	);
 }
@@ -105,3 +139,11 @@ const LabelInputContainer = ({
 		</div>
 	);
 };
+
+export default function SignUpPage() {
+	return (
+		<AuthProvider>
+			<SignUp />
+		</AuthProvider>
+	);
+}

@@ -89,6 +89,10 @@ public class SentimentController {
         try {
             // Extract user ID from JWT token
             String userId = jwtUtil.extractUsername(token.substring(7)); // Remove "Bearer " prefix
+            if (userId == null || userId.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Invalid token");
+            }
 
             // Retrieve user history from MongoDB
             List<UserHistory> userHistory = historyRepository.findByUserId(userId);

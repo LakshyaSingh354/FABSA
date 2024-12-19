@@ -4,9 +4,55 @@ import { Label } from "@/components/signup-label";
 import { cn } from "@/lib/utils";
 import { AuthProvider, useAuth } from "../context/auth-context";
 
+export const handleAuth = async (
+	url: string,
+	formData: FormData,
+	authContext: any,
+	redirectPath: string | null
+) => {
+	const data = Object.fromEntries(formData.entries());
+	const json = Object.fromEntries(
+		Object.entries(data).map(([key, value]) => [key, String(value)])
+	);
+
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(json),
+		});
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! Status: ${response.status}`);
+		}
+
+		const responseData = await response.text();
+		console.log("Success:", responseData);
+
+		const token = responseData;
+
+		if (token) {
+			if (!authContext) {
+				throw new Error("AuthContext is null");
+			}
+			const { login } = authContext;
+			login(token);
+		} else {
+			console.error("No token received");
+		}
+
+		// Redirect user to the specified path
+		window.location.href = redirectPath!;
+	} catch (error) {
+		console.error("Error:", error);
+	}
+};
+
 function SignIn() {
 	const authContext = useAuth();
-	const {isAuthenticated} = authContext;
+	const { isAuthenticated } = authContext;
 	if (isAuthenticated) {
 		window.location.href = "/new-search";
 	}
@@ -14,43 +60,9 @@ function SignIn() {
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
-		const data = Object.fromEntries(formData.entries());
-		const json = Object.fromEntries(
-			Object.entries(data).map(([key, value]) => [key, String(value)])
-		);
+		const loginUrl = "http://localhost:8080/api/v1/auth/login";
 
-		const url = "http://localhost:8080/api/v1/auth/login";
-		try {
-			const response = await fetch(url, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(json),
-			});
-
-			if (!response.ok) {
-				throw new Error(`HTTP error! Status: ${response.status}`);
-			}
-
-			const responseData = await response.text();
-			console.log("Success:", responseData);
-
-			const token = responseData;
-
-			if (token) {
-				if (!authContext) {
-					throw new Error("AuthContext is null");
-				}
-				const { login } = authContext;
-				login(token);
-			} else {
-				console.error("No token received");
-			}
-		} catch (error) {
-			console.error("Error:", error);
-		}
-		window.location.href = "/new-search";
+		await handleAuth(loginUrl, formData, authContext, "/new-search");
 	};
 	return (
 		<div className="flex flex-col justify-center items-center h-screen">
@@ -87,6 +99,12 @@ function SignIn() {
 					</button>
 				</form>
 			</div>
+			<button
+				onClick={() => (window.location.href = "/sign-up")}
+				className="inline-flex h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+			>
+				Sign up instead
+			</button>
 		</div>
 	);
 }

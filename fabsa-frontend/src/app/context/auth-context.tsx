@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.removeItem('jwtToken');
         setToken(null);
         setIsAuthenticated(false);
-        router.push('/login'); // Redirect to login page
+        router.push('/');
     };
 
     return (

@@ -8,6 +8,8 @@ import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthProvider, useAuth } from "../context/auth-context";
+import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 type Sentiment = {
 	individual_sentiments: string[];
@@ -173,31 +175,23 @@ function Search() {
 
 		return chartData;
 	};
-
+	const { state } = useSidebar()
 	return (
-		<div className="h-screen w-screen py-16 flex flex-col items-center justify-start px-10">
-			<header className="absolute flex items-end justify-end w-11/12 text-2xl top-8">
-				<button
-					onClick={() => {
-						window.location.href = "/new-search";
-					}}
-				>
-					<GrNewWindow />
-				</button>
-			</header>
+		<div className={`h-screen py-16 flex flex-col items-center justify-start pl-10 ${state === "expanded" ? "w-screen ml-[-9rem]" : "w-screen"}`}>
+			
 			<h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
 				<p>Search for any company or cryptocurrency</p>
 			</h2>
-			<PlaceholdersAndVanishInput
+			{!apiResponse && <PlaceholdersAndVanishInput
 				placeholders={placeholders}
 				onChange={handleChange}
 				onSubmit={onSubmit}
-			/>
+			/>}
 			{loading && <CircularProgress />}
 			{apiResponse && (
 				<div className="flex flex-col items-center">
 					<p className="text-2xl text-center text-gray-400 py-4">{`Current Sentiment for ${apiResponse.entity}: `}</p>
-					<div className="w-screen pt-14 flex justify-center">
+					<div className={`${state === "expanded" ? "w-[80vw]" : "w-screen"} pt-14 flex justify-center`}>
 						{typeof apiResponse.sentiment === "object" ? (
 							<div className="w-10/12">
 								<ValueBar
@@ -251,9 +245,16 @@ function Search() {
 }
 
 export default function SearchPage() {
+	
 	return (
 		<AuthProvider>
-		<Search />
-	</AuthProvider>
-	)
+      <SidebarProvider>
+        <AppSidebar />
+        <main>
+          <SidebarTrigger />
+          <Search />
+        </main>
+      </SidebarProvider>
+    </AuthProvider>
+  )
 }
