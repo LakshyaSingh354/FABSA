@@ -38,7 +38,7 @@ export type HistoryResponse = {
 	timestamp: string;
 };
 
-export const getChartData = (jsonData: HistoricalSentiment) => {
+const getChartData = (jsonData: HistoricalSentiment) => {
     const chartData = jsonData.map((item) => ({
         Date: item.date,
         "Sentiment Score": item.sentiment_score,

@@ -2,7 +2,6 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
-import { getChartData, HistoricalSentiment, HistoryResponse, Sentiment } from "../page";
 import { ValueBar } from "@/components/value-bar";
 import { AuthProvider, useAuth } from "../context/auth-context";
 import { CircularProgress } from "@mui/material";
@@ -10,11 +9,21 @@ import SentimentChart from "@/components/historical-chart";
 import { format } from 'date-fns';
 import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { HistoricalSentiment, HistoryResponse, Sentiment } from "../page";
 
 
-export const parseTimestamp = (timestamp: string): string => {
+function parseTimestamp (timestamp: string): string {
     const date = new Date(timestamp);
     return format(date, 'dd/MM/yy hh:mm a');
+};
+
+const getChartData = (jsonData: HistoricalSentiment) => {
+    const chartData = jsonData.map((item) => ({
+        Date: item.date,
+        "Sentiment Score": item.sentiment_score,
+    }));
+
+    return chartData;
 };
 
 function History() {

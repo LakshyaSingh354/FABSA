@@ -1,0 +1,23 @@
+# Ignore node_modules and log files
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignore build directories
+.next
+dist
+
+
+# Ignore IDE and editor files
+.vscode
+*.swp
+*.swo
+
+# Ignore Dockerfile and docker-compose files
+Dockerfile
+docker-compose.yml
+
+# Ignore other unnecessary files
+.git
+.gitignore
+README.md

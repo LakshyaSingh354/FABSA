@@ -1,0 +1,47 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    networks:
+      - app-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    command: ["--bind_ip_all"] # Ensure Mongo listens on all container interfaces
+
+  frontend:
+    build:
+      context: ./fabsa-frontend
+    ports:
+      - "3000:3000" # Expose frontend for user access
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./fabsa-backend
+    networks:
+      - app-network
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://admin:password@mongo:27017/FABSA?authSource=admin
+      - PYTHON_API_URL=http://python-model:8000 # Use service name in internal calls
+    depends_on:
+      - mongo
+      - python-model
+    ports:
+      - "8080:8080" # Expose backend for user access
+
+  python-model:
+    build:
+      context: ./fabsa-model
+    networks:
+      - app-network
+    # Uncomment below for debugging purposes
+    # ports:
+    #   - "8000:8000" 
+
+networks:
+  app-network:
+    driver: bridge

@@ -1,10 +1,5 @@
 package com.fabsa.fabsa_backend.database;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-
-import com.mongodb.client.MongoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
@@ -17,7 +12,7 @@ public class MongoDBConfig {
     @Bean
     public MongoDatabaseFactory mongoDatabaseFactory() {
         return new SimpleMongoClientDatabaseFactory(
-                "mongodb+srv://lakshyasingh538:e0xLlZDEeADiHXAC@cluster0.t2nzc.mongodb.net/FABSA?retryWrites=true&w=majority");
+                "mongodb://admin:password@mongo:27017/FABSA?authSource=admin");
     }
 
     @Bean

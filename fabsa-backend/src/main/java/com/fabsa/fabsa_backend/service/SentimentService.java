@@ -21,7 +21,7 @@ public class SentimentService {
     }
 
     public String analyzeSentiment(String entity) {
-        String pythonApiUrl = "http://localhost:8000/analyze";
+        String pythonApiUrl = "http://python-model:8000/analyze";
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
         
@@ -36,7 +36,7 @@ public class SentimentService {
     @Cacheable(value = "sentiment", key = "#entity")
     public String getSentimentFromApi(String entity) {
         // Fetch sentiment from Python API
-        String pythonApiUrl = "http://localhost:8000/analyze?entity=" + entity;
+        String pythonApiUrl = "http://python-model:8000/analyze?entity=" + entity;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> pythonResponse = restTemplate.getForEntity(pythonApiUrl, String.class);
         return pythonResponse.getBody();
@@ -44,7 +44,7 @@ public class SentimentService {
 
     @Cacheable(value = "histSentiment", key = "#entity")
     public String getHistSentiment(String entity){
-        String apiUrl = "http://localhost:8000/historical_sentiment?entity=" + entity;
+        String apiUrl = "http://python-model:8000/historical_sentiment?entity=" + entity;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
         return response.getBody();

@@ -4,7 +4,7 @@ import { Label } from "@/components/signup-label";
 import { cn } from "@/lib/utils";
 import { AuthProvider, useAuth } from "../context/auth-context";
 
-export const handleAuth = async (
+const handleAuth = async (
 	url: string,
 	formData: FormData,
 	authContext: any,

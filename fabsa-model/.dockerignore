@@ -1,0 +1,8 @@
+__pycache__
+.vscode
+sentiment_model
+.gitignore
+Dockerfile
+model.py
+requirements.txt
+onnx_convert.py

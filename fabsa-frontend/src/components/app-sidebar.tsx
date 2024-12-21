@@ -14,7 +14,12 @@ import {
 import { GrNewWindow } from "react-icons/gr";
 import { useAuth } from "@/app/context/auth-context";
 import { useEffect, useState } from "react";
-import { parseTimestamp } from "@/app/[sessionId]/page";
+import { format } from "date-fns";
+
+function parseTimestamp (timestamp: string): string {
+    const date = new Date(timestamp);
+    return format(date, 'dd/MM/yy hh:mm a');
+};
 
 type Sentiment = {
 	individual_sentiments: string[];

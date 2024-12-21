@@ -3,41 +3,52 @@ import { Input } from "@/components/signup-input";
 import { Label } from "@/components/signup-label";
 import { cn } from "@/lib/utils";
 import { AuthProvider, useAuth } from "../context/auth-context";
-import { handleAuth } from "../sign-in/page";
 
-// const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     const formData = new FormData(e.currentTarget);
-//     const data = Object.fromEntries(
-//         formData.entries()
-//     );
-//     const json = Object.fromEntries(
-//         Object.entries(data).map(([key, value]) => [key, String(value)])
-//     );
+const handleAuth = async (
+	url: string,
+	formData: FormData,
+	authContext: any,
+	redirectPath: string | null
+) => {
+	const data = Object.fromEntries(formData.entries());
+	const json = Object.fromEntries(
+		Object.entries(data).map(([key, value]) => [key, String(value)])
+	);
 
-//     console.log(JSON.stringify(json))
+	try {
+		const response = await fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(json),
+		});
 
-//     const url = 'http://localhost:8080/api/v1/auth/register';
-//     fetch(url, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(json),
-//     })
-//         .then((response) => {
-//             if (!response.ok) {
-//                 throw new Error(`HTTP error! Status: ${response.status}`);
-//             }
-//         })
-//         .then((data) => {
-//             console.log('Success:', data);
-//         })
-//         .catch((error) => {
-//             console.error('Error:', error);
-//         });
-//         window.location.href = '/new-search';
-// };
+		if (!response.ok) {
+			throw new Error(`HTTP error! Status: ${response.status}`);
+		}
+
+		const responseData = await response.text();
+		console.log("Success:", responseData);
+
+		const token = responseData;
+
+		if (token) {
+			if (!authContext) {
+				throw new Error("AuthContext is null");
+			}
+			const { login } = authContext;
+			login(token);
+		} else {
+			console.error("No token received");
+		}
+
+		// Redirect user to the specified path
+		window.location.href = redirectPath!;
+	} catch (error) {
+		console.error("Error:", error);
+	}
+};
 
 function SignUp() {
 	const authContext = useAuth();
