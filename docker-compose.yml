@@ -12,8 +12,10 @@ services:
   frontend:
     build:
       context: ./fabsa-frontend
+    environment:
+      - BACKEND_API_URL=http://backend:8080 # Use service name in internal calls
     ports:
-      - "3000:3000" # Expose frontend for user access
+      - "3000:80" # Expose frontend for user access
     depends_on:
       - backend
     networks:
@@ -30,8 +32,8 @@ services:
     depends_on:
       - mongo
       - python-model
-    ports:
-      - "8080:8080" # Expose backend for user access
+    # ports:
+    #   - "8080:8080" # Expose backend for user access
 
   python-model:
     build:

@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const router = useRouter();
-    const demoToken = process.env.DEMO_JWT_TOKEN;
+    const demoToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZW1vIiwiaWF0IjoxNzM0NTM2NjQ5LCJleHAiOjM5NDIwNTY2NDl9.ppi0Jqa1-BcE6XgvDN69mI-ZPamWxZbvwDdZ5VXcgsk";
 
     useEffect(() => {
         if (typeof window !== 'undefined') {

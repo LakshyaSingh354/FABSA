@@ -41,7 +41,7 @@ function History() {
 	useEffect(() => {
 		const getHistory = async () => {
 			await fetch(
-				`http://localhost:8080/api/v1/sentiment/history/${sessionId}`,
+				`https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/sentiment/history/${sessionId}`,
 				{
 					headers: {
 						Auth: `Bearer ${token}`,
@@ -133,7 +133,7 @@ function History() {
 	const histSent = () => {
 		setLoading2(true);
 		fetch(
-			`http://localhost:8080/api/v1/sentiment/historical-sentiment/${sessionId}`,
+			`https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/sentiment/historical-sentiment/${sessionId}`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,

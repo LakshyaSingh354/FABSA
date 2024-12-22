@@ -54,7 +54,7 @@ export function AppSidebar() {
 	console.log(`TOKEN:::${token}`);
 	const getHistoryList = async () => {
 		const response = await fetch(
-			`http://localhost:8080/api/v1/sentiment/history`,
+			`https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/sentiment/history`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,

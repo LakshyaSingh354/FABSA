@@ -58,7 +58,7 @@ function Home() {
 	console.log(`isAuthenticated: ${isAuthenticated}`);
 
 	// get token from env
-	const token = process.env.NEXT_PUBLIC_DEMO_JWT_TOKEN;
+	const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZW1vIiwiaWF0IjoxNzM0NTM2NjQ5LCJleHAiOjM5NDIwNTY2NDl9.ppi0Jqa1-BcE6XgvDN69mI-ZPamWxZbvwDdZ5VXcgsk";
 	console.log(`token: ${token}`);
 	const placeholders: string[] = ["Google", "Tesla", "Microsoft", "Bitcoin"];
 
@@ -80,7 +80,7 @@ function Home() {
 		setLoading(true);
 		try {
 			const response = await fetch(
-				`http://localhost:8080/api/v1/sentiment/${query}`,
+				`https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/sentiment/${query}`,
 				{
 					headers: {
 						Auth: `Bearer ${token}`,
@@ -152,7 +152,7 @@ function Home() {
 	const histSent = () => {
 		setLoading2(true);
 		fetch(
-			`http://localhost:8080/api/v1/sentiment/historical-sentiment/${sessionId}`,
+			`https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/sentiment/historical-sentiment/${sessionId}`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,

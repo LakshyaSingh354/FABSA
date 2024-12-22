@@ -69,7 +69,7 @@ function Search() {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const response = await fetch(`http://localhost:8080/api/v1/sentiment/${query}`, {
+			const response = await fetch(`https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/sentiment/${query}`, {
 				headers: {
 					Auth: `Bearer ${token}`,
 				},
@@ -140,7 +140,7 @@ function Search() {
 		// window.location.href = `/${sessionId}`;
 		setLoading2(true);
 		fetch(
-			`http://localhost:8080/api/v1/sentiment/historical-sentiment/${sessionId}`,
+			`https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/sentiment/historical-sentiment/${sessionId}`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,

@@ -61,8 +61,8 @@ function SignUp() {
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
-		const registerUrl = "http://localhost:8080/api/v1/auth/register";
-		const loginUrl = "http://localhost:8080/api/v1/auth/login";
+		const registerUrl = "https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/auth/register";
+		const loginUrl = "https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/auth/login";
 
 		try {
 			// Step 1: Register the user
