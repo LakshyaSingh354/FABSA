@@ -169,7 +169,7 @@ function History() {
 	const { state } = useSidebar();
 	return (
 		<div
-			className={`h-screen sm:mt-[-2rem] flex flex-col items-center justify-center ${
+			className={`h-screen sm:mt-[-2rem] flex flex-col sm:top-0 top-2 items-center justify-center ${
 				state === "expanded" ? "sm:w-[calc(100vw-18rem)]" : "w-screen"
 			}`}
 		>
