@@ -6,8 +6,8 @@ import { ValueBar } from "@/components/value-bar";
 import { AuthProvider, useAuth } from "../context/auth-context";
 import { CircularProgress } from "@mui/material";
 import SentimentChart from "@/components/historical-chart";
-import { format } from "date-fns";
-import { toZonedTime } from 'date-fns-tz';
+import moment from 'moment-timezone';
+
 import {
 	SidebarProvider,
 	SidebarTrigger,
@@ -17,10 +17,8 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { HistoricalSentiment, HistoryResponse, Sentiment } from "../page";
 
 function parseTimestamp(timestamp: string): string {
-	const date = new Date(timestamp);
 	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // User's timezone
-	const localDate = toZonedTime(date, timeZone); // Convert to local time
-	return format(localDate, "dd/MM/yy hh:mm a");
+	return moment.utc(timestamp).tz(timeZone).format("DD/MM/YY hh:mm a");
 }
 
 const getChartData = (jsonData: HistoricalSentiment) => {
