@@ -15,11 +15,14 @@ import { GrNewWindow } from "react-icons/gr";
 import { useAuth } from "@/app/context/auth-context";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
-function parseTimestamp (timestamp: string): string {
-    const date = new Date(timestamp);
-    return format(date, 'dd/MM/yy hh:mm a');
-};
+function parseTimestamp(timestamp: string): string {
+	const date = new Date(timestamp);
+	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // User's timezone
+	const localDate = toZonedTime(date, timeZone); // Convert to local time
+	return format(localDate, "dd/MM/yy hh:mm a");
+}
 
 type Sentiment = {
 	individual_sentiments: string[];

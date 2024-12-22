@@ -6,32 +6,39 @@ import { ValueBar } from "@/components/value-bar";
 import { AuthProvider, useAuth } from "../context/auth-context";
 import { CircularProgress } from "@mui/material";
 import SentimentChart from "@/components/historical-chart";
-import { format } from 'date-fns';
-import { SidebarProvider, SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { format } from "date-fns";
+import { toZonedTime } from 'date-fns-tz';
+import {
+	SidebarProvider,
+	SidebarTrigger,
+	useSidebar,
+} from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { HistoricalSentiment, HistoryResponse, Sentiment } from "../page";
 
-
-function parseTimestamp (timestamp: string): string {
-    const date = new Date(timestamp);
-    return format(date, 'dd/MM/yy hh:mm a');
-};
+function parseTimestamp(timestamp: string): string {
+	const date = new Date(timestamp);
+	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // User's timezone
+	const localDate = toZonedTime(date, timeZone); // Convert to local time
+	return format(localDate, "dd/MM/yy hh:mm a");
+}
 
 const getChartData = (jsonData: HistoricalSentiment) => {
-    const chartData = jsonData.map((item) => ({
-        Date: item.date,
-        "Sentiment Score": item.sentiment_score,
-    }));
+	const chartData = jsonData.map((item) => ({
+		Date: item.date,
+		"Sentiment Score": item.sentiment_score,
+	}));
 
-    return chartData;
+	return chartData;
 };
 
 function History() {
 	const { sessionId } = useParams();
 
 	const [loading2, setLoading2] = useState(false);
-	const [historyResponse, setHistoryResponse] =
-		useState(null as HistoryResponse | null);
+	const [historyResponse, setHistoryResponse] = useState(
+		null as HistoryResponse | null
+	);
 	const authContext = useAuth();
 
 	const { isAuthenticated } = authContext;
@@ -51,35 +58,37 @@ function History() {
 				.then((response) => response.json())
 				.then((data) => {
 					if (typeof data.currSentiment === "string") {
-                        try {
-                            data.currSentiment = JSON.parse(
-                                data.currSentiment
+						try {
+							data.currSentiment = JSON.parse(
+								data.currSentiment
 							) as Sentiment;
 						} catch (error) {
-                            console.error(
+							console.error(
 								"Error parsing curr sentiment:",
 								error
 							);
 						}
 					}
-                    if (typeof data.histSentiment === "string" && data.histSentiment !== "") {
-                        try {
-                            data.histSentiment = JSON.parse(
-                                data.histSentiment
-                            ) as HistoricalSentiment;
-                        } catch (error) {
-                            console.error(
-                                "Error parsing historical sentiment:",
-                                error
-                            );
-                        }
-                    }
-                    setHistoryResponse(data);
+					if (
+						typeof data.histSentiment === "string" &&
+						data.histSentiment !== ""
+					) {
+						try {
+							data.histSentiment = JSON.parse(
+								data.histSentiment
+							) as HistoricalSentiment;
+						} catch (error) {
+							console.error(
+								"Error parsing historical sentiment:",
+								error
+							);
+						}
+					}
+					setHistoryResponse(data);
 				});
-
 		};
-        getHistory();
-	},);
+		getHistory();
+	});
 
 	const conditionalMessage = (sentimentScore: number) => {
 		return (
@@ -159,18 +168,28 @@ function History() {
 				setLoading2(false);
 			});
 	};
-    const { state } = useSidebar()
+	const { state } = useSidebar();
 	return (
-		<div className={`h-screen mt-[-2rem] flex flex-col items-center justify-center ${state === "expanded" ? "w-[calc(100vw-18rem)]" : "w-screen"}`}>
-            {historyResponse?.timestamp && (
-                <div className="flex flex-col items-center">
-                    <p className="text-2xl text-center text-white py-4">{`Session started at ${parseTimestamp(historyResponse.timestamp)}`}</p>
-                </div>
-            )}
+		<div
+			className={`h-screen mt-[-2rem] flex flex-col items-center justify-center ${
+				state === "expanded" ? "w-[calc(100vw-18rem)]" : "w-screen"
+			}`}
+		>
+			{historyResponse?.timestamp && (
+				<div className="flex flex-col items-center">
+					<p className="text-2xl text-center text-white py-4">{`Session started at ${parseTimestamp(
+						historyResponse.timestamp
+					)}`}</p>
+				</div>
+			)}
 			{historyResponse?.currSentiment && (
 				<div className="flex flex-col items-center">
 					<p className="text-2xl text-center text-gray-400 py-4">{`Current Sentiment for ${historyResponse.entity}: `}</p>
-					<div className={`${state === "expanded" ? "w-[80vw]" : "w-screen"} pt-14 flex justify-center`}>
+					<div
+						className={`${
+							state === "expanded" ? "w-[80vw]" : "w-screen"
+						} pt-14 flex justify-center`}
+					>
 						{typeof historyResponse.currSentiment === "object" ? (
 							<div className="w-10/12">
 								<ValueBar
@@ -198,18 +217,21 @@ function History() {
 					)}
 				</div>
 			)}
-            {loading2 && (
+			{loading2 && (
 				<div className="flex py-6 justify-center">
 					<CircularProgress />
 				</div>
 			)}
-            {historyResponse?.histSentiment && (
+			{historyResponse?.histSentiment && (
 				<div className="flex flex-col items-center">
 					<p className="text-2xl text-center text-gray-400 py-4">{`Historical Sentiment for ${historyResponse.entity}: `}</p>
 					<div className="w-screen pt-14 flex justify-center">
-						{typeof historyResponse.histSentiment ===
-						"object" ? (
-							<div className={`${state==="expanded"?"w-9/12":"w-11/12"}`}>
+						{typeof historyResponse.histSentiment === "object" ? (
+							<div
+								className={`${
+									state === "expanded" ? "w-9/12" : "w-11/12"
+								}`}
+							>
 								<SentimentChart
 									data={getChartData(
 										historyResponse.histSentiment
@@ -217,10 +239,7 @@ function History() {
 								/>
 							</div>
 						) : (
-							<p>
-								Sentiment:{" "}
-								{historyResponse.histSentiment}
-							</p>
+							<p>Sentiment: {historyResponse.histSentiment}</p>
 						)}
 					</div>
 				</div>
@@ -233,12 +252,12 @@ export default function HistoryPage() {
 	return (
 		<AuthProvider>
 			<SidebarProvider>
-        <AppSidebar />
-        <main>
-          <SidebarTrigger />
-          <History />
-        </main>
-      </SidebarProvider>
+				<AppSidebar />
+				<main>
+					<SidebarTrigger />
+					<History />
+				</main>
+			</SidebarProvider>
 		</AuthProvider>
 	);
 }
