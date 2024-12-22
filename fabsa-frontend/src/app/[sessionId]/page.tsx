@@ -169,8 +169,8 @@ function History() {
 	const { state } = useSidebar();
 	return (
 		<div
-			className={`h-screen mt-[-2rem] flex flex-col items-center justify-center ${
-				state === "expanded" ? "w-[calc(100vw-18rem)]" : "w-screen"
+			className={`h-screen sm:mt-[-2rem] flex flex-col items-center justify-center ${
+				state === "expanded" ? "sm:w-[calc(100vw-18rem)]" : "w-screen"
 			}`}
 		>
 			{historyResponse?.timestamp && (
@@ -227,8 +227,8 @@ function History() {
 						{typeof historyResponse.histSentiment === "object" ? (
 							<div
 								className={`${
-									state === "expanded" ? "w-9/12" : "w-11/12"
-								}`}
+									state === "expanded" ? "sm:w-9/12" : "sm:w-11/12"
+								} w-screen`}
 							>
 								<SentimentChart
 									data={getChartData(

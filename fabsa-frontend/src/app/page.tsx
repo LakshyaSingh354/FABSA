@@ -181,9 +181,9 @@ function Home() {
 
 	return (
 		<div
-			className={`h-screen py-16 flex flex-col items-center justify-start pl-10 w-screen`}
+			className={`h-screen py-2 gap-4 flex flex-col items-center justify-start sm:pl-10 px-4 w-screen`}
 		>
-			<header className="flex w-10/12 text-xl items-center justify-between gap-4">
+			<header className="flex sm:w-11/12 w-screen px-2 text-xl items-center justify-between">
 				<a href="/">
 					<GrNewWindow />
 				</a>
@@ -195,7 +195,7 @@ function Home() {
 					<span className="relative z-20">Login</span>
 				</button>
 			</header>
-			<h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
+			<h2 className="pt-10 sm:mb-20 sm:mt-0 text-xl text-center sm:text-5xl dark:text-white text-black">
 				<p>Search for any company or cryptocurrency</p>
 			</h2>
 			{!apiResponse && (
@@ -246,7 +246,7 @@ function Home() {
 					<div className="w-screen pt-14 flex justify-center">
 						{typeof historicalSentimentResponse.histSentiment ===
 						"object" ? (
-							<div className="w-10/12">
+							<div className="sm:w-10/12 w-screen ml-0">
 								<SentimentChart
 									data={getChartData(
 										historicalSentimentResponse.histSentiment

@@ -177,7 +177,7 @@ function Search() {
 	};
 	const { state } = useSidebar()
 	return (
-		<div className={`h-screen py-16 flex flex-col items-center justify-start pl-10 ${state === "expanded" ? "w-screen ml-[-9rem]" : "w-screen"}`}>
+		<div className={`h-screen py-16 flex flex-col items-center px-4 sm:px-0 w-screen justify-start sm:pl-10 ${state === "expanded" ? "sm:w-screen sm:ml-[-9rem]" : "sm:w-screen"}`}>
 			
 			<h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
 				<p>Search for any company or cryptocurrency</p>
@@ -191,9 +191,9 @@ function Search() {
 			{apiResponse && (
 				<div className="flex flex-col items-center">
 					<p className="text-2xl text-center text-gray-400 py-4">{`Current Sentiment for ${apiResponse.entity}: `}</p>
-					<div className={`${state === "expanded" ? "w-[80vw]" : "w-screen"} pt-14 flex justify-center`}>
+					<div className={`${state === "expanded" ? "sm:w-[80vw]" : "w-screen"} pt-14 flex justify-center`}>
 						{typeof apiResponse.sentiment === "object" ? (
-							<div className="w-10/12">
+							<div className="sm:w-10/12">
 								<ValueBar
 									value={
 										apiResponse.sentiment.sentiment_score
@@ -224,7 +224,7 @@ function Search() {
 					<div className="w-screen pt-14 flex justify-center">
 						{typeof historicalSentimentResponse.histSentiment ===
 						"object" ? (
-							<div className="w-10/12">
+							<div className="sm:w-9/12 w-screen">
 								<SentimentChart
 									data={getChartData(
 										historicalSentimentResponse.histSentiment
