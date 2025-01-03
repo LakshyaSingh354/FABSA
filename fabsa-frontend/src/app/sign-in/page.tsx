@@ -60,7 +60,7 @@ function SignIn() {
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
-		const loginUrl = "https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/auth/login";
+		const loginUrl = "https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/auth/login";
 
 		await handleAuth(loginUrl, formData, authContext, "/new-search");
 	};

@@ -61,8 +61,8 @@ function SignUp() {
 		e.preventDefault();
 
 		const formData = new FormData(e.currentTarget);
-		const registerUrl = "https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/auth/register";
-		const loginUrl = "https://fabsawa-debfbhgaa4baa6fw.centralindia-01.azurewebsites.net/api/v1/auth/login";
+		const registerUrl = "https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/auth/register";
+		const loginUrl = "https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/auth/login";
 
 		try {
 			// Step 1: Register the user
