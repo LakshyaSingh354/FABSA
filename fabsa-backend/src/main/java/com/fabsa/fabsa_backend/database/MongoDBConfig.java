@@ -12,7 +12,7 @@ public class MongoDBConfig {
     @Bean
     public MongoDatabaseFactory mongoDatabaseFactory() {
         return new SimpleMongoClientDatabaseFactory(
-                "mongodb://admin:password@mongo:27017/FABSA?authSource=admin");
+                "mongodb+srv://lakshyasingh538:e0xLlZDEeADiHXAC@cluster0.t2nzc.mongodb.net/FABSA?retryWrites=true&w=majority");
     }
 
     @Bean

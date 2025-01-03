@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from transformers import AutoTokenizer
 from optimum.onnxruntime import ORTModelForSequenceClassification
 from rapidfuzz import fuzz, process
@@ -7,6 +8,7 @@ import dotenv
 import time
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import onnxruntime as ort
 
 class FABSA:
     def __init__(self, entity, api_key, from_date="", to_date="", num_news=50, batch_size=4):
@@ -16,7 +18,12 @@ class FABSA:
         self.to_date = to_date
         self.num_news = num_news
         self.batch_size = batch_size
-        self.onnx_model = ORTModelForSequenceClassification.from_pretrained("onnx", file_name="model.onnx")
+        options = ort.SessionOptions()
+        options.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_EXTENDED
+        options.intra_op_num_threads = 4  # Adjust for better CPU utilization if needed
+
+        # Load the optimized model
+        self.session = ort.InferenceSession("onnx/model.onnx", options)
         self.tokenizer = AutoTokenizer.from_pretrained("onnx")
 
     def fetch_news(self):
@@ -48,11 +55,30 @@ class FABSA:
         """
         Runs inference on a batch of texts and returns their predicted sentiment classes.
         """
-        inputs = self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
-        outputs = self.onnx_model(**inputs)
-        predicted_classes = outputs.logits.argmax(dim=-1).tolist()
-        logits = outputs.logits.softmax(dim=-1)  # Convert logits to probabilities
-        return predicted_classes, logits
+        # Tokenize input texts
+        inputs = self.tokenizer(texts, return_tensors="np", padding=True, truncation=True, max_length=512)
+
+        # Extract input features as numpy arrays for ONNX
+        input_ids = inputs['input_ids']
+        attention_mask = inputs['attention_mask']
+
+        # Prepare the inputs for ONNX runtime
+        ort_inputs = {
+            'input_ids': input_ids,        # Expected input name in the ONNX model
+            'attention_mask': attention_mask # Expected input name in the ONNX model
+        }
+
+        # Run inference
+        ort_outputs = self.session.run(None, ort_inputs)
+
+        # Get logits and apply softmax to get probabilities
+        logits = ort_outputs[0]
+        probabilities = np.exp(logits) / np.sum(np.exp(logits), axis=-1, keepdims=True)  # Convert logits to probabilities
+
+        # Get predicted classes (highest probability)
+        predicted_classes = np.argmax(logits, axis=-1).tolist()
+
+        return predicted_classes, probabilities
 
     def predict_sentiment(self):
         """
