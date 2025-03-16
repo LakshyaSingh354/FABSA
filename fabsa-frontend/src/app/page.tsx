@@ -152,7 +152,7 @@ function Home() {
 	const histSent = () => {
 		setLoading2(true);
 		fetch(
-			`https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}?days=30`,
+			`https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}?days=28`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,
