@@ -33,7 +33,7 @@ public class SentimentService {
         return response.getBody();
     }
 
-    @Cacheable(value = "sentiment", key = "#entity")
+    // @Cacheable(value = "sentiment", key = "#entity")
     public String getSentimentFromApi(String entity) {
         // Fetch sentiment from Python API
         String pythonApiUrl = "https://fabsa-model-92062613767.asia-south2.run.app/analyze?entity=" + entity;
@@ -42,9 +42,9 @@ public class SentimentService {
         return pythonResponse.getBody();
     }
 
-    @Cacheable(value = "histSentiment", key = "#entity")
-    public String getHistSentiment(String entity){
-        String apiUrl = "https://fabsa-model-92062613767.asia-south2.run.app/historical_sentiment?entity=" + entity;
+    // @Cacheable(value = "histSentiment", key = "#entity + '_' + #days")
+    public String getHistSentiment(String entity, int days){
+        String apiUrl = "https://fabsa-model-92062613767.asia-south2.run.app/historical_sentiment?entity=" + entity + "&days=" + days;
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
         return response.getBody();

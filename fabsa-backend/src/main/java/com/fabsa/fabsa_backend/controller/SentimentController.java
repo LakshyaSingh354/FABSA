@@ -56,7 +56,7 @@ public class SentimentController {
     }
 
     @GetMapping("/historical-sentiment/{id}")
-    public ResponseEntity<?> getAndUpdateHistSentiment(@PathVariable String id, @RequestHeader("Auth") String token){
+    public ResponseEntity<?> getAndUpdateHistSentiment(@PathVariable String id, @RequestParam int days, @RequestHeader("Auth") String token){
         try{
             String userId = jwtUtil.extractUsername(token.substring(7));
             if (userId == null || userId.isEmpty()) {
@@ -72,7 +72,7 @@ public class SentimentController {
                         .body("No history found for id " + id);
             }
 
-            String histSentiment = sentimentService.getHistSentiment(userHistory.getEntity());
+            String histSentiment = sentimentService.getHistSentiment(userHistory.getEntity(), days);
 
             userHistory.setHistSentiment(histSentiment);
             historyRepository.save(userHistory);

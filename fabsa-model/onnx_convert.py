@@ -1,16 +1,16 @@
-# from optimum.onnxruntime import ORTModelForSequenceClassification
-# from transformers import AutoTokenizer
+from optimum.onnxruntime import ORTModelForSequenceClassification
+from transformers import AutoTokenizer
 
-# model_checkpoint = "sentiment_model"
-# save_directory = "onnx/"
+model_checkpoint = "sentiment_model"
+save_directory = "onnx/"
 
-# ort_model = ORTModelForSequenceClassification.from_pretrained(model_checkpoint, export=True)
-# tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
+ort_model = ORTModelForSequenceClassification.from_pretrained(model_checkpoint, export=True)
+tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
 
-# ort_model.save_pretrained(save_directory)
-# tokenizer.save_pretrained(save_directory)
+ort_model.save_pretrained(save_directory)
+tokenizer.save_pretrained(save_directory)
 
-# print(f"ONNX model saved in {save_directory}")
+print(f"ONNX model saved in {save_directory}")
 
 # onnx_model = ORTModelForSequenceClassification.from_pretrained("onnx/", file_name='model.onnx')
 # tokenizer = AutoTokenizer.from_pretrained("onnx/")

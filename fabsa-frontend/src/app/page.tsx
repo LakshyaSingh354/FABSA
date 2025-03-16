@@ -152,7 +152,7 @@ function Home() {
 	const histSent = () => {
 		setLoading2(true);
 		fetch(
-			`https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}`,
+			`https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}?days=30`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,
@@ -196,7 +196,7 @@ function Home() {
 				</button>
 			</header>
 			<h2 className="pt-10 sm:mb-20 sm:mt-0 text-xl text-center sm:text-5xl dark:text-white text-black">
-				<p>Search for any company or cryptocurrency</p>
+				<p>FABSA: Financial Aspect Based Sentiment Analysis</p>
 			</h2>
 			{!apiResponse && (
 				<PlaceholdersAndVanishInput
