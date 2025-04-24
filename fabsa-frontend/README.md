@@ -14,7 +14,7 @@ pnpm dev
 bun dev
 ```
 
-Open [https://fabsa-backend-92062613767.asia-south1.run.app:3000](https://fabsa-backend-92062613767.asia-south1.run.app:3000) with your browser to see the result.
+Open [ https://fabsa-backend-92062613767.us-central1.run.app:3000]( https://fabsa-backend-92062613767.us-central1.run.app:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 

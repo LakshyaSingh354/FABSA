@@ -56,3 +56,7 @@ async def historical_sentiment(
     )
     sentiment_data = fabsa.historical_sentiment_analysis(days)
     return sentiment_data
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app , port=8080, reload=True)

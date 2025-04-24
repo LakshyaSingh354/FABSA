@@ -69,7 +69,7 @@ function Search() {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const response = await fetch(`https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/sentiment/${query}`, {
+			const response = await fetch(`https://fabsa-backend-92062613767.us-central1.run.app/api/v1/sentiment/${query}`, {
 				headers: {
 					Auth: `Bearer ${token}`,
 				},
@@ -140,7 +140,7 @@ function Search() {
 		// window.location.href = `/${sessionId}`;
 		setLoading2(true);
 		fetch(
-			`https://fabsa-backend-92062613767.asia-south1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}?days=28`,
+			`https://fabsa-backend-92062613767.us-central1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}?days=28`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,
@@ -187,6 +187,7 @@ function Search() {
 				onChange={handleChange}
 				onSubmit={onSubmit}
 			/>}
+			<div className="pt-4"></div>
 			{loading && <CircularProgress />}
 			{apiResponse && (
 				<div className="flex flex-col items-center">

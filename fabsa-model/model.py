@@ -25,7 +25,7 @@ train_texts, val_texts, train_labels, val_labels = train_test_split(
     train_data["text"], train_data["label"], test_size=0.2, random_state=42
 )
 
-MODEL_NAME = "microsoft/deberta-v3-base"
+MODEL_NAME = "FinBert"
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME, num_labels=3)
 
