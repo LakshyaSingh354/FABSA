@@ -64,6 +64,7 @@ function Search() {
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setQuery(e.target.value);
 	};
+	
 
 	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -90,6 +91,7 @@ function Search() {
 	const conditionalMessage = (sentimentScore: number) => {
 		return (
 			<div className="text-xl pt-6 flex justify-center">
+				
 				{sentimentScore >= 0.2 && sentimentScore < 0.5 && (
 					<p>
 						Positive trends are emerging. Things seem to be moving
@@ -177,9 +179,8 @@ function Search() {
 	};
 	const { state } = useSidebar()
 	return (
-		<div className={`h-screen py-16 flex flex-col items-center px-4 sm:px-0 w-screen justify-start sm:pl-10 ${state === "expanded" ? "sm:w-screen sm:ml-[-9rem]" : "sm:w-screen"}`}>
-			
-			<h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl dark:text-white text-black">
+		<div className={`h-screen py- flex flex-col items-center px-4 sm:px-0 w-screen justify-start sm:pl-10 ${state === "expanded" ? "sm:w-screen sm:ml-[-9rem]" : "sm:w-screen"}`}>
+			<h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl py-10 dark:text-white text-black">
 				<p>Search for any company or cryptocurrency</p>
 			</h2>
 			{!apiResponse && <PlaceholdersAndVanishInput

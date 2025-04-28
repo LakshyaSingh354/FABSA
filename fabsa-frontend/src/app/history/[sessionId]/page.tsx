@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { ValueBar } from "@/components/value-bar";
-import { AuthProvider, useAuth } from "../context/auth-context";
+import { AuthProvider, useAuth } from "../../context/auth-context";
 import { CircularProgress } from "@mui/material";
 import SentimentChart from "@/components/historical-chart";
 import moment from 'moment-timezone';
@@ -14,7 +14,7 @@ import {
 	useSidebar,
 } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { HistoricalSentiment, HistoryResponse, Sentiment } from "../page";
+import { HistoricalSentiment, HistoryResponse, Sentiment } from "@/app/search/page";
 
 function parseTimestamp(timestamp: string): string {
 	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // User's timezone

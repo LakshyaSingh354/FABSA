@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const login = (jwtToken: string) => {
         localStorage.setItem('jwtToken', jwtToken);
         setToken(jwtToken);
-        setIsAuthenticated(jwtToken !== demoToken);
+        setIsAuthenticated(true);
     };
 
     const logout = () => {

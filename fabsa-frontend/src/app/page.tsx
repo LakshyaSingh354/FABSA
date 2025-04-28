@@ -1,275 +1,137 @@
-"use client";
+'use client';
 
-import { PlaceholdersAndVanishInput } from "@/components/search-bar";
-import SentimentChart from "@/components/historical-chart";
-import { ValueBar } from "@/components/value-bar";
-import { GrNewWindow } from "react-icons/gr";
-import { CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
+import { Button } from "@/components/ui/button";
+// import { Card, CardContent } from "@/components/ui/card";
+import {motion}  from "framer-motion";
+import { Sparkles, LineChart, DollarSign, PieChart } from "lucide-react";
 import { AuthProvider, useAuth } from "./context/auth-context";
+import {useRouter} from "next/navigation";
 
-export type Sentiment = {
-	individual_sentiments: string[];
-	aggregated_sentiments: {};
-	sentiment_score: number;
-	probabilities: number[][];
-};
-
-export type ApiResponse = {
-	entity: string;
-	sentiment: string | Sentiment;
-	userId: string;
-	id: string;
-};
-
-export type HistoricalSentiment = {
-    date: string;
-	aggregated_sentiments: {};
-	sentiment_score: number;
-}[];
-
-export type HistoryResponse = {
-    id: string;
-	userId: string;
-	entity: string;
-	currSentiment: Sentiment;
-	histSentiment: HistoricalSentiment;
-	timestamp: string;
-};
-
-const getChartData = (jsonData: HistoricalSentiment) => {
-    const chartData = jsonData.map((item) => ({
-        Date: item.date,
-        "Sentiment Score": item.sentiment_score,
-    }));
-
-    return chartData;
-};
-function Home() {
+function FABSA() {
 	const authContext = useAuth();
 	const { isAuthenticated } = authContext;
 	const router = useRouter();
+  return (
 
-	if (isAuthenticated) {
-		router.replace("/new-search");
-	}
 
-	console.log(`isAuthenticated: ${isAuthenticated}`);
+    <div className="min-h-screen bg-gradient-to-b from-[#0d0d0d] to-[#1a1a1a] text-white">
+		
+      {/* Hero Section */}
+      <section className="flex flex-col items-center justify-center text-center pt-32 pb-20 px-6">
+        <motion.h1 
+          className="text-5xl md:text-7xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-cyan-400"
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          FABSA
+        </motion.h1>
+        <motion.p
+          className="mt-6 text-lg md:text-2xl text-gray-400 max-w-2xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
+          Financial Aspect-Based Sentiment Analysis, reimagined for precision-driven insights.
+        </motion.p>
+        <motion.div
+          className="mt-10 flex gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.8 }}
+        >
+          <Button onClick={() => {isAuthenticated ? window.location.href = '/new-search' : window.location.href = '/sign-in'}} className="text-lg px-8 py-6 bg-emerald-500 hover:bg-emerald-600 rounded-2xl shadow-lg">Get Started</Button>
+          {/* <Button variant="outline" className="text-lg px-8 py-6 border-gray-600 rounded-2xl hover:border-white">Learn More</Button> */}
+        </motion.div>
+      </section>
 
-	// get token from env
-	const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkZW1vIiwiaWF0IjoxNzM0NTM2NjQ5LCJleHAiOjM5NDIwNTY2NDl9.ppi0Jqa1-BcE6XgvDN69mI-ZPamWxZbvwDdZ5VXcgsk";
-	console.log(`token: ${token}`);
-	const placeholders: string[] = ["Google", "Tesla", "Microsoft", "Bitcoin"];
+      {/* Features Section */}
+      <section className="py-20 px-6 bg-[#121212]">
+        <div className="max-w-7xl mx-auto">
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold text-center mb-16"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            Why Choose FABSA?
+          </motion.h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+            <FeatureCard
+              Icon={Sparkles}
+              title="Aspect-Level Precision"
+              description="Pinpoint sentiment for specific financial aspects with unmatched accuracy."
+            />
+            <FeatureCard
+              Icon={LineChart}
+              title="Real-Time Analysis"
+              description="Track evolving market sentiment in real-time with blazing speed."
+            />
+            <FeatureCard
+              Icon={DollarSign}
+              title="Investment Insights"
+              description="Make smarter investment decisions backed by granular sentiment data."
+            />
+            <FeatureCard
+              Icon={PieChart}
+              title="Comprehensive Coverage"
+              description="Analyze news, reports, and social media across all major financial sectors."
+            />
+          </div>
+        </div>
+      </section>
 
-	const [query, setQuery] = useState("");
-	const [apiResponse, setApiResponse] = useState(null as ApiResponse | null);
-	const [sessionId, setSessionId] = useState("");
-	const [historicalSentimentResponse, setHistoricalSentimentResponse] =
-		useState(null as HistoryResponse | null);
+      {/* Call to Action */}
+      <section className="py-24 px-6 flex flex-col items-center bg-gradient-to-r from-[#0f0f0f] to-[#1f1f1f]">
+        <motion.h2
+          className="text-4xl md:text-5xl font-bold text-center mb-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          Ready to Elevate Your Financial Analysis?
+        </motion.h2>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+        >
+          <Button onClick={() => {isAuthenticated ? window.location.href = '/new-search' : window.location.href = '/sign-in'}} className="text-lg px-10 py-6 bg-cyan-500 hover:bg-cyan-600 rounded-2xl shadow-xl">Get Started with FABSA</Button>
+          <Button onClick={() => {window.location.href = '/about-us'}} className="text-lg ml-6 px-10 py-6 bg-cyan-500 hover:bg-cyan-600 rounded-2xl shadow-xl">Know about us</Button>
 
-	const [loading, setLoading] = useState(false);
-	const [loading2, setLoading2] = useState(false);
+        </motion.div>
+      </section>
 
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setQuery(e.target.value);
-	};
+    </div>
+  );
+}
 
-	const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		setLoading(true);
-		try {
-			const response = await fetch(
-				`https://fabsa-backend-92062613767.us-central1.run.app/api/v1/sentiment/${query}`,
-				{
-					headers: {
-						Auth: `Bearer ${token}`,
-					},
-				}
-			);
-			const data = await response.json();
-			if (typeof data.sentiment === "string") {
-				data.sentiment = JSON.parse(data.sentiment);
-			}
-			setApiResponse(data);
-			setSessionId(data.id);
-		} catch (error) {
-			console.error("Error fetching data:", error);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const conditionalMessage = (sentimentScore: number) => {
-		return (
-			<div className="text-xl pt-6 flex justify-center">
-				{sentimentScore >= 0.2 && sentimentScore < 0.5 && (
-					<p>
-						Positive trends are emerging. Things seem to be moving
-						in a good direction.
-					</p>
-				)}
-				{sentimentScore >= 0.5 && sentimentScore < 0.75 && (
-					<p>
-						There’s a solid positive sentiment. Signs point toward
-						success and good performance.
-					</p>
-				)}
-				{sentimentScore >= 0.75 && (
-					<p>
-						Exceptional feedback! Everything indicates strong
-						positivity and high regard.
-					</p>
-				)}
-				{sentimentScore > -0.2 && sentimentScore < 0.2 && (
-					<p>
-						The sentiment appears neutral. No significant changes or
-						reactions are noticeable.
-					</p>
-				)}
-				{sentimentScore <= -0.2 && sentimentScore > -0.49 && (
-					<p>
-						Some negative sentiment is noticeable. It's worth
-						keeping an eye on further developments.
-					</p>
-				)}
-				{sentimentScore <= -0.5 && sentimentScore > -0.75 && (
-					<p>
-						Concerns are rising. Sentiment trends suggest challenges
-						or dissatisfaction.
-					</p>
-				)}
-				{sentimentScore <= -0.75 && (
-					<p>
-						Sentiment is deeply negative. The situation could
-						require immediate attention or investigation.
-					</p>
-				)}
-			</div>
-		);
-	};
-
-	const histSent = () => {
-		setLoading2(true);
-		fetch(
-			`https://fabsa-backend-92062613767.us-central1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}?days=28`,
-			{
-				headers: {
-					Auth: `Bearer ${token}`,
-				},
-			}
-		)
-			.then((response) => response.json())
-			.then((data) => {
-				if (typeof data.histSentiment === "string") {
-					console.log(data.histSentiment);
-					try {
-						data.histSentiment = JSON.parse(
-							data.histSentiment
-						) as HistoricalSentiment;
-					} catch (error) {
-						console.error(
-							"Error parsing historical sentiment:",
-							error
-						);
-					}
-				}
-				setHistoricalSentimentResponse(data);
-				setLoading2(false);
-			});
-	};
-
-	return (
-		<div
-			className={`h-screen py-2 gap-4 flex flex-col items-center justify-start sm:pl-10 px-4 w-screen`}
-		>
-			<header className="flex sm:w-11/12 w-screen px-2 text-xl items-center justify-between">
-				<a href="/">
-					<GrNewWindow />
-				</a>
-				<button
-					onClick={() => router.replace("/sign-in")}
-					className="px-8 py-2 rounded-full relative bg-slate-700 text-white text-sm hover:shadow-2xl hover:shadow-white/[0.1] transition duration-200 border border-slate-600"
-				>
-					<div className="absolute inset-x-0 h-px w-1/2 mx-auto -top-px shadow-2xl  bg-gradient-to-r from-transparent via-teal-500 to-transparent" />
-					<span className="relative z-20">Login</span>
-				</button>
-			</header>
-			<h2 className="pt-10 sm:mb-20 sm:mt-0 text-xl text-center sm:text-5xl dark:text-white text-black">
-				<p>FABSA: Financial Aspect Based Sentiment Analysis</p>
-			</h2>
-			{!apiResponse && (
-				<PlaceholdersAndVanishInput
-					placeholders={placeholders}
-					onChange={handleChange}
-					onSubmit={onSubmit}
-				/>
-			)}
-			{loading && (
-				<div className="flex py-6 justify-center">
-					<CircularProgress />
-				</div>
-			)}
-			{apiResponse && (
-				<div className="flex flex-col items-center">
-					<p className="text-2xl text-center text-gray-400 py-4">{`Current Sentiment for ${apiResponse.entity}: `}</p>
-					<div className={`w-screen pt-14 flex justify-center`}>
-						{typeof apiResponse.sentiment === "object" ? (
-							<div className="w-10/12">
-								<ValueBar
-									value={
-										apiResponse.sentiment.sentiment_score
-									}
-								/>
-								{conditionalMessage(
-									apiResponse.sentiment.sentiment_score
-								)}
-							</div>
-						) : (
-							<p>Sentiment: {apiResponse.sentiment}</p>
-						)}
-					</div>
-					{!historicalSentimentResponse && (
-						<button
-							className="inline-flex my-12 h-12 animate-shimmer items-center justify-center rounded-md border border-slate-800 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 font-medium text-slate-400 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
-							onClick={histSent}
-						>
-							View past month trends
-						</button>
-					)}
-				</div>
-			)}
-			{loading2 && <CircularProgress />}
-			{historicalSentimentResponse && (
-				<div className="flex flex-col items-center">
-					<p className="text-2xl text-center text-gray-400 py-4">{`Historical Sentiment for ${historicalSentimentResponse.entity}: `}</p>
-					<div className="w-screen pt-14 flex justify-center">
-						{typeof historicalSentimentResponse.histSentiment ===
-						"object" ? (
-							<div className="sm:w-10/12 w-screen ml-0">
-								<SentimentChart
-									data={getChartData(
-										historicalSentimentResponse.histSentiment
-									)}
-								/>
-							</div>
-						) : (
-							<p>
-								Sentiment:{" "}
-								{historicalSentimentResponse.histSentiment}
-							</p>
-						)}
-					</div>
-				</div>
-			)}
-		</div>
-	);
+function FeatureCard({ Icon, title, description }: { Icon: any; title: string; description: string; }) {
+  return (
+    <motion.div
+      className="bg-[#1e1e1e] p-8 rounded-2xl hover:scale-105 transition-transform shadow-lg flex flex-col items-center text-center"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="p-4 bg-emerald-600 rounded-full mb-6">
+        <Icon className="w-8 h-8 text-white" />
+      </div>
+      <h3 className="text-xl font-semibold mb-4">{title}</h3>
+      <p className="text-gray-400 text-sm">{description}</p>
+    </motion.div>
+  );
 }
 
 export default function HomePage() {
 	return (
 		<AuthProvider>
-			<Home />
+			<FABSA />
 		</AuthProvider>
 	);
 }

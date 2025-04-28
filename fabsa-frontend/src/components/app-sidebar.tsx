@@ -1,5 +1,6 @@
 import { RiHistoryFill } from "react-icons/ri";
 import { IoIosLogOut } from "react-icons/io";
+import { FaHome } from "react-icons/fa";
 
 import {
 	Sidebar,
@@ -14,8 +15,7 @@ import {
 import { GrNewWindow } from "react-icons/gr";
 import { useAuth } from "@/app/context/auth-context";
 import { useEffect, useState } from "react";
-import moment from 'moment-timezone';
-
+import moment from "moment-timezone";
 
 function parseTimestamp(timestamp: string): string {
 	const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone; // User's timezone
@@ -48,9 +48,9 @@ export function AppSidebar() {
 	const auth = useAuth();
 	const { token } = auth;
 
-  const handleLogOut = () => {
-    auth.logout();
-  };
+	const handleLogOut = () => {
+		auth.logout();
+	};
 
 	console.log(`TOKEN:::${token}`);
 	const getHistoryList = async () => {
@@ -63,7 +63,6 @@ export function AppSidebar() {
 			}
 		);
 		const data = await response.json();
-		console.log(data);
 		return data;
 	};
 	const [historyList, setHistoryList] = useState<HistoryItem[]>([]);
@@ -81,18 +80,27 @@ export function AppSidebar() {
 			<SidebarContent>
 				<SidebarGroup className="flex items-end">
 					<SidebarGroupLabel className="text-xl">
-						<a href={`/new-search`}>
-							<GrNewWindow />
-						</a>
+						<div className="flex w-full justify-between">
+							<a className="mx-40" href="/">
+								<FaHome />
+							</a>
+							<a href={`/new-search`}>
+								<GrNewWindow />
+							</a>
+						</div>
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
 						<SidebarMenu>
 							{[...historyList].reverse().map((item) => (
 								<SidebarMenuItem key={item.id}>
 									<SidebarMenuButton asChild>
-										<a href={item.id}>
+										<a href={`history/${item.id}`}>
 											<RiHistoryFill />
-											<span>{`${item.entity} | ${parseTimestamp(item.timestamp)}`}</span>
+											<span>{`${
+												item.entity
+											} | ${parseTimestamp(
+												item.timestamp
+											)}`}</span>
 										</a>
 									</SidebarMenuButton>
 								</SidebarMenuItem>
