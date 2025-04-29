@@ -94,7 +94,7 @@ export function AppSidebar() {
 							{[...historyList].reverse().map((item) => (
 								<SidebarMenuItem key={item.id}>
 									<SidebarMenuButton asChild>
-										<a href={`history/${item.id}`}>
+										<a href={`/history/${item.id}`}>
 											<RiHistoryFill />
 											<span>{`${
 												item.entity
