@@ -140,7 +140,7 @@ function History() {
 	const histSent = () => {
 		setLoading2(true);
 		fetch(
-			` https://fabsawa-debfbhgaa4baa6fw.canadacentral-01.azurewebsites.net/api/v1/sentiment/historical-sentiment/${sessionId}`,
+			` https://fabsawa-debfbhgaa4baa6fw.canadacentral-01.azurewebsites.net/api/v1/sentiment/historical-sentiment/${sessionId}?days=28`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,
@@ -169,12 +169,12 @@ function History() {
 	const { state } = useSidebar();
 	return (
 		<div
-			className={`h-screen sm:mt-[-2rem] flex flex-col sm:top-0 top-2 items-center justify-center ${
-				state === "expanded" ? "sm:w-[calc(100vw-18rem)]" : "w-screen"
+			className={`h-screen sm:mt-[-2rem] bg-[#191919] flex flex-col sm:top-0 top-2 items-center justify-center overflow-x-hidden ${
+				state === "expanded" ? "sm:w-[calc(100vw-16rem)]" : "w-screen"
 			}`}
 		>
 			{historyResponse?.timestamp && (
-				<div className="flex flex-col items-center">
+				<div className={`flex flex-col items-center`}>
 					<p className="text-2xl text-center text-white py-4">{`Session started at ${parseTimestamp(
 						historyResponse.timestamp
 					)}`}</p>

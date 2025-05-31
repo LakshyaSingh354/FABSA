@@ -41,7 +41,7 @@ function FABSA() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <Button onClick={() => {isAuthenticated ? window.location.href = '/new-search' : window.location.href = '/sign-in'}} className="text-lg px-8 py-6 bg-emerald-500 hover:bg-emerald-600 rounded-2xl shadow-lg">Get Started</Button>
+          <Button onClick={() => {window.location.href = '/search'}} className="text-lg px-8 py-6 bg-emerald-500 hover:bg-emerald-600 rounded-2xl shadow-lg">Try it out</Button>
           {/* <Button variant="outline" className="text-lg px-8 py-6 border-gray-600 rounded-2xl hover:border-white">Learn More</Button> */}
         </motion.div>
       </section>
@@ -100,8 +100,8 @@ function FABSA() {
           viewport={{ once: true }}
           transition={{ delay: 0.2, duration: 0.8 }}
         >
-          <Button onClick={() => {isAuthenticated ? window.location.href = '/new-search' : window.location.href = '/sign-in'}} className="text-lg px-10 py-6 bg-cyan-500 hover:bg-cyan-600 rounded-2xl shadow-xl">Get Started with FABSA</Button>
-          <Button onClick={() => {window.location.href = '/about-us'}} className="text-lg ml-6 px-10 py-6 bg-cyan-500 hover:bg-cyan-600 rounded-2xl shadow-xl">Know about us</Button>
+          <Button onClick={() => {isAuthenticated ? window.location.href = '/new-search' : window.location.href = '/sign-in'}} className="text-lg px-10 py-6 bg-cyan-500 hover:bg-cyan-600 rounded-2xl shadow-xl">Get Started</Button>
+          {/* <Button onClick={() => {window.location.href = '/about-us'}} className="text-lg ml-6 px-10 py-6 bg-cyan-500 hover:bg-cyan-600 rounded-2xl shadow-xl">Know about us</Button> */}
 
         </motion.div>
       </section>

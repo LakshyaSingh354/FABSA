@@ -181,10 +181,10 @@ function Home() {
 
     return (
         <div
-            className={`h-screen py-2 gap-4 flex flex-col items-center justify-start sm:pl-10 px-4 w-screen`}
+            className={`h-full min-h-screen py-2 gap-4 flex flex-col bg-[#191919] overflow-x-hidden items-center justify-start sm:pl-10 px-4 w-screen`}
         >
             <header className="flex sm:w-11/12 w-screen px-2 text-xl items-center justify-between">
-                <a href="/">
+                <a href="/search">
                     <GrNewWindow />
                 </a>
                 <button

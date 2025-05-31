@@ -100,7 +100,7 @@ function Search() {
 				)}
 				{sentimentScore >= 0.5 && sentimentScore < 0.75 && (
 					<p>
-						There’s a solid positive sentiment. Signs point toward
+						There's a solid positive sentiment. Signs point toward
 						success and good performance.
 					</p>
 				)}
@@ -177,9 +177,20 @@ function Search() {
 
 		return chartData;
 	};
+	useEffect(() => {
+		if (!historicalSentimentResponse) {
+			document.body.style.overflow = "hidden";
+		} else {
+			document.body.style.overflow = "";
+		}
+		// Clean up on unmount
+		return () => {
+			document.body.style.overflow = "";
+		};
+	}, [historicalSentimentResponse]);
 	const { state } = useSidebar()
 	return (
-		<div className={`h-screen py- flex flex-col items-center px-4 sm:px-0 w-screen justify-start sm:pl-10 ${state === "expanded" ? "sm:w-screen sm:ml-[-9rem]" : "sm:w-screen"}`}>
+		<div className={`h-full min-h-screen py- flex bg-[#191919] overflow-x-hidden overflow-y-hidden flex-col mt-[-1.5rem] items-center px-4 sm:px-0 w-screen justify-start sm:pl-10 ${state === "expanded" ? "sm:w-screen sm:ml-[-9rem]" : "sm:w-screen"}`}>
 			<h2 className="mb-10 sm:mb-20 text-xl text-center sm:text-5xl py-10 dark:text-white text-black">
 				<p>Search for any company or cryptocurrency</p>
 			</h2>
