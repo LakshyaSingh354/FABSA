@@ -5,6 +5,9 @@ import dotenv
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from FABSA import FABSA
+import sys
+
+sys.path.append("/app")
 
 dotenv.load_dotenv()
 api_key = os.getenv("NEWS_API")

@@ -11,7 +11,7 @@ COPY . .
 RUN ./mvnw package -DskipTests
 
 # Expose the port the application runs on
-EXPOSE 8080
+EXPOSE 80
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "target/fabsa-backend-0.0.1-SNAPSHOT.jar"]

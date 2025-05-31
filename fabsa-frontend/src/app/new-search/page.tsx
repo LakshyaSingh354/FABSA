@@ -70,7 +70,7 @@ function Search() {
 		e.preventDefault();
 		setLoading(true);
 		try {
-			const response = await fetch(`https://fabsa-backend-92062613767.us-central1.run.app/api/v1/sentiment/${query}`, {
+			const response = await fetch(`https://fabsawa-debfbhgaa4baa6fw.canadacentral-01.azurewebsites.net/api/v1/sentiment/${query}`, {
 				headers: {
 					Auth: `Bearer ${token}`,
 				},
@@ -142,7 +142,7 @@ function Search() {
 		// window.location.href = `/${sessionId}`;
 		setLoading2(true);
 		fetch(
-			`https://fabsa-backend-92062613767.us-central1.run.app/api/v1/sentiment/historical-sentiment/${sessionId}?days=28`,
+			`https://fabsawa-debfbhgaa4baa6fw.canadacentral-01.azurewebsites.net/api/v1/sentiment/historical-sentiment/${sessionId}?days=28`,
 			{
 				headers: {
 					Auth: `Bearer ${token}`,

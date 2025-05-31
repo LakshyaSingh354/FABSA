@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import numpy as np
 from transformers import AutoTokenizer
 from optimum.onnxruntime import ORTModelForSequenceClassification
@@ -9,9 +10,12 @@ import time
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import onnxruntime as ort
+import sys
+
 
 class FABSA:
     def __init__(self, entity, api_key, from_date="", to_date="", num_news=50, batch_size=4):
+        # sys.path.append("/app")
         self.entity = entity
         self.api_key = api_key
         self.from_date = from_date
@@ -23,8 +27,8 @@ class FABSA:
         options.intra_op_num_threads = 4  # Adjust for better CPU utilization if needed
 
         # Load the optimized model
-        self.session = ort.InferenceSession("onnx/model.onnx", options)
-        self.tokenizer = AutoTokenizer.from_pretrained("onnx")
+        self.session = ort.InferenceSession(Path("/app/onnx/model.onnx"), options)
+        self.tokenizer = AutoTokenizer.from_pretrained("/app/onnx")
 
     def fetch_news(self):
         """
